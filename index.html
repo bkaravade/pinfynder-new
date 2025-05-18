@@ -1,0 +1,32 @@
+<input type="file" id="csvFileInput" />
+<script>
+    var codes=[];
+document.getElementById("csvFileInput").addEventListener("change", function (event) {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+        const csvContent = e.target.result;
+
+        // Split into rows
+        const rows = csvContent.trim().split("\n");
+
+        // Extract headers
+        const headers = rows[0].split(",");
+
+        // Map rows to objects
+        const data = rows.slice(1).map(row => {
+            const values = row.split(",");
+            return headers.reduce((obj, header, index) => {
+                obj[header] = values[index];
+                return obj;
+            }, {});
+        });
+
+        console.log(data); 
+        codes.push(data);
+    };
+
+    if (file) reader.readAsText(file);
+});
+</script>
