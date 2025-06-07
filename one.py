@@ -4,17 +4,17 @@ import pandas as pd
 import json
 
 
-app = Flask(__name__) # app Init
-mail = Mail(app) # Mail Init
+one = Flask(__name__) # one Init
+mail = Mail(one) # Mail Init
 
 # Mail Config
-app.config['MAIL_SERVER']='mail.spellsys.tech'
-app.config['MAIL_PORT'] = 465
-app.config['MAIL_USERNAME'] = 'demo@spellsys.tech'
-app.config['MAIL_PASSWORD'] = 'DemoMail@12'
-app.config['MAIL_USE_TLS'] = False
-app.config['MAIL_USE_SSL'] = True
-mail = Mail(app)
+one.config['MAIL_SERVER']='mail.spellsys.tech'
+one.config['MAIL_PORT'] = 465
+one.config['MAIL_USERNAME'] = 'demo@spellsys.tech'
+one.config['MAIL_PASSWORD'] = 'DemoMail@12'
+one.config['MAIL_USE_TLS'] = False
+one.config['MAIL_USE_SSL'] = True
+mail = Mail(one)
 
 # Read data convert into Json Format
 rdata = pd.read_csv('PincodeData.csv', sep=",")
@@ -26,7 +26,7 @@ def fid_details(code):
    return_elements_list = []
    for i in pindata:
       if i['Pincode'] == int(code):
-         return_elements_list.append(i)
+         return_elements_list.oneend(i)
 
    if len(return_elements_list) == 0:
       return_elements_list = [{
@@ -42,7 +42,7 @@ def fid_PostName(PostName):
    # print(PostName)
    for i in pindata:
       if (PostName in i['Place / City / Area']):
-         return_elements_list.append(i)
+         return_elements_list.oneend(i)
    
    if len(return_elements_list) == 0:
       return_elements_list = [{
@@ -54,33 +54,33 @@ def fid_PostName(PostName):
 
 
 
-@app.route('/api', methods = ['GET', 'POST'])
+@one.route('/api', methods = ['GET', 'POST'])
 def api():
    return jsonify({ 'Pincode': pindata})
 
 #  API Data From Pincode<int>
-@app.route('/api/<int:pcode>', methods = ['GET', 'POST'])
+@one.route('/api/<int:pcode>', methods = ['GET', 'POST'])
 def api_code(pcode):
       return jsonify({ 'Pincode': fid_details(pcode) })
 
 # API Data From PostName<string>
-@app.route('/api/<string:postName>', methods = ['GET', 'POST'])
+@one.route('/api/<string:postName>', methods = ['GET', 'POST'])
 def api_name(postName):
       return jsonify({ 'Pincode': fid_PostName(postName) })
 
-@app.route('/')
+@one.route('/')
 def index():
    return render_template('index.html')
 
-@app.route('/name')
+@one.route('/name')
 def pname():
    return render_template('name.html')
 
-@app.route('/code')
+@one.route('/code')
 def hello_world():
    return render_template('code.html')
 
-@app.route('/getCode', methods = ['POST'])
+@one.route('/getCode', methods = ['POST'])
 def getPincode():
    output = request.form.to_dict()
    code = output['code']
@@ -89,7 +89,7 @@ def getPincode():
    else:
       return render_template('code.html', name1 = 'Pincode Length Should be 6 Numbers Not Characters!')
 
-@app.route('/getPin',  methods = ['POST'])
+@one.route('/getPin',  methods = ['POST'])
 def getPin():
    output = request.form.to_dict()
    name = output['name']
@@ -101,7 +101,7 @@ def getPin():
       
 
 
-@app.route('/send-mail', methods = ['GET','POST'])
+@one.route('/send-mail', methods = ['GET','POST'])
 def send():
    data = request.get_json()
    msg = Message(
@@ -114,7 +114,7 @@ def send():
    return 'Mail has been sent. Thank You!'
 
 
-@app.route('/ballal', methods=['GET', 'POST'])
+@one.route('/ballal', methods=['GET', 'POST'])
 def hello_ballal():
    data = request.get_json()
    return data['name']
@@ -122,8 +122,8 @@ def hello_ballal():
 
 
 
-app.run(debug = True, port=5000)
+one.run(debug = True, port=5000)
 
 # if __name__ == '__main__':
 
-# 	app.run()
+# 	one.run()
